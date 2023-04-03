@@ -125,14 +125,14 @@ $alternatives = [];
    $json = json_encode($alternatives);
    file_put_contents($databas, $json);
 
-    $alt = [
-        "image" => $img,    
-        "alternatives" => $alternatives_1,
-    ];
-
-    var_dump($alt);
-
-    sendJSON($alt);
+   // $alt = [
+   //     "image" => $img,    
+   //     "alternatives" => $alternatives_1,
+   // ];    
+//
+   // var_dump($alt);
+//
+   // sendJSON($alt);
 
 
        // foreach($dog as $value){
