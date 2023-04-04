@@ -28,56 +28,54 @@ file_put_contents($databas, $data);
 $alternatives = [];
 // ALTERNATIV 2 
 
-//$i = 0;
-//
-//while(count($alternatives) < 4){
-//
-//     $name = $dogs[array_rand($dogs, 1)]["name"];
-//     if(! in_array($name, $alternatives)){
-//        array_push($alternatives, $name);   
-//     };
-//
-//     $i++;  
-//};
-//
-//var_dump($alternatives);
-//
-//$random = array_rand($alternatives, 1);
-//
-//$correct_answer = $alternatives[$random];
-//
-//var_dump($correct_answer);
-//
-//$alternatives_1 = [];
-//
-//$j = 0;
-//while(count($alternatives_1) < 4){
-//    if(in_array($correct_answer,$alternatives)){
-//        $option = [ 
-//            "name" => $correct_answer,
-//            "correct" => true,
-//        ];
-//        array_push($option, $alternatives_1);
-//        $j++;
-//    } else {
-//        $option = [
-//            "name" => $alternatives(array_rand($alternatives, 1))["name"],
-//            "correct" => false,       
-//        ];
-//
-//        if(! in_array($alternatives_1, $option)){
-//            array_push($option, $alternatives_1);
-//        }
-//        $j++;
-//    }
-//
-//}
-//
-//var_dump($alternatives_1);
-//
+$i = 0;
+
+while(count($alternatives) < 4){
+
+     $name = $dogs[array_rand($dogs, 1)]["name"];
+     if(!in_array($name, $alternatives)){
+        array_push($alternatives, $name);   
+     };
+
+     $i++;  
+};
+
+$correct_answer = $alternatives[array_rand($alternatives, 1)];
+
+$alternatives_1 = [];
+
+$j = 0;
+
+while($j < 4){
+    
+    foreach($alternatives as $alt){
+
+        if($alt == $correct_answer){
+            
+            $option = [ 
+                "name" => $correct_answer,
+                "correct" => true,
+                  ];
+            array_push($alternatives_1, $option);
+            $j++;
+        } else {
+                     
+            $option = [            
+                "name" => $alt,
+                "correct" => false,        
+                 ];                
+             array_push($alternatives_1, $option);
+            $j++;   
+        }
+    }   
+}
+
+var_dump($alternatives_1);
+
+
 
 //ALTERNATIV 1
-
+//
 //        $correct_answer = [
 //            "name" =>  $dogs[array_rand($dogs, 1)]["name"],
 //            "correct" => true,
@@ -86,53 +84,57 @@ $alternatives = [];
 //
 //   get_alternatives($dogs[array_rand($dogs, 1)]["name"]);   
 //
+//   $i = 0;
+//
 //    function get_alternatives($answer){
 //        global $alternatives;
 //        $correct_comparisson = $alternatives[0]["name"];
-//
-//        if(!$answer === $correct_comparisson){
-//            while(count($alternatives) < 4){
+//        while(count($alternatives) < 4){
+//        if(!$answer == $correct_comparisson){       
 //                $option = [
 //                    "correct" => false,
 //                    "name" => $dogs[array_rand($dogs, 1)]["name"], 
 //                ]; 
 //
-//                if(! in_array($option,$alternatives)){
+//                if(!in_array($option,$alternatives)){
 //                    array_push($alternatives, $option);
+//                    $i++;
 //                } else { 
 //                    global $dogs;
-//                get_alternatives($dogs[array_rand($dogs, 1)]["name"]);
-//
-//                }    
+//                get_alternatives($dogs[array_rand($dogs, 1)]["name"]); };    
+//            } else {
+//                global $dogs;
+//                $new_option = $dogs[array_rand($dogs, 1)]["name"];
+//             get_alternatives($new_option);
 //            };
-//        } else {
-//            global $dogs;
-//         get_alternatives($dogs[array_rand($dogs, 1)]["name"]);
-//        }
-//    }
+//        }; 
+//    };
 //
-    var_dump($alternatives);
+//    var_dump($alternatives);
        // $data = json_encode($alternatives_1, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
        //         file_put_contents($databas, $data);
 
     
-  //  $correct_imgtag = str_replace(" ", "_" ,$alternatives[$answer]["name"]) . ".jpg";
-//    $correct_answer = $alternatives[$answer]["name"];
+
+   foreach($dogs as $dog){
+    if ( $correct_answer === $dog["name"]){
+        $correct_imgtag = $dog["image"];
+    }
+   }
+
+   var_dump($correct_imgtag);
 
 
-   // $img = json_encode($images.$correct_imgtag);
-
-   $json = json_encode($alternatives);
-   file_put_contents($databas, $json);
-
-   // $alt = [
-   //     "image" => $img,    
-   //     "alternatives" => $alternatives_1,
-   // ];    
+    $alt = [
+        "image" => $images . $correct_imgtag,    
+        "alternatives" => $alternatives_1,
+    ];    
 //
    // var_dump($alt);
 //
-   // sendJSON($alt);
+    $json = json_encode($alt, JSON_PRETTY_PRINT);
+    file_put_contents($databas, $json);
+    sendJSON($alt);
 
 
        // foreach($dog as $value){

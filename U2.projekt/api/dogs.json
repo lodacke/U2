@@ -1,1 +1,21 @@
-[]
+{
+    "image": "..\/images\/Chihuahua.jpg",
+    "alternatives": [
+        {
+            "name": "Chihuahua",
+            "correct": true
+        },
+        {
+            "name": "Saluki",
+            "correct": false
+        },
+        {
+            "name": "Belgian Malinois",
+            "correct": false
+        },
+        {
+            "name": "Jack Russell Terrier",
+            "correct": false
+        }
+    ]
+}
