@@ -1,30 +1,77 @@
 <?php 
+ini_set("display_errors", 1);
 
 require_once "functions.php";
 
-$points_file = "users.json";
-$points_content = ["points" => 0];
-$method = $_SERVER["REQUEST_METHOD"];
+$file_name = "users.json";
 
-if(file_exists($points_file)){
-    $json = file_get_contents($points_file);
-    $data = json_decode($json, true);
+$json = file_get_contents($file_name);
+$users = json_decode($json, true);
 
-} else { 
-    $json = json_encode($points_content);
-    $data = file_put_contents($points_file, $json);  
-};
+$requestdata = file_get_contents("php://input");
+$logedinUser = json_decode($requestdata, true);
 
-if($method == "POST"){
-    if(isset($_POST["points"])){
-        $points_dom = $_POST["points"];
-        $points_file += $points_dom;
-    } 
-    file_put_contents($points_file, $points_content);
-    sendJSON($points_file);
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    $username = $logedinUser["username"];
+    $password = $logedinUser["password"];
+    $points = $logedinUser["points"];
+
+    foreach($users as $user){  
+        
+        var_dump($user);
+        var_dump($username);
+
+
+        //Kan behöva vara forloop?
+
+        if ($user["username"] == $username) {
+            
+            $user["points"] = $user["points"] + $logedinUser["points"];
+            
+            $encodedData = json_encode($users, JSON_PRETTY_PRINT);
+            file_put_contents($file_name, $encodedData);
+
+            sendJSON(["points" => $user["points"]]);
+        } else {
+            sendJSON([
+                "error" => "Cant find user with named username."
+            ], 404);
+        }
+    }
 } else {
-    $error = ["error" => "Cant load points"];
-    sendJSON($points_file);
+$error = ["error" => "Cant load points"];
+sendJSON($file_name);
+}
+
+if($_SERVER["REQUEST_METHOD"] == "GET"){
+
+    $sorted_users = [];
+    $i = 0;
+    while($i < count($users)){
+        $user = $users[$i];
+
+       // if($user["points"] < $user["points"])
+
+        $user = [
+            "username" => $user["username"],
+            "points" => $user["points"],
+        ]; 
+       
+     array_push($sorted_users, $user); 
+        $i++;    
+    };
+
+    arsort($sorted_users);
+
+
+   // $top_five = array_slice($sorted_users, 5, 0);
+
+
+     //sortera arrayen med users och plocka ut de 5 med högsta värden i points. 
+
+   sendJSON($sorted_users);
+
 }
 
 ?>
