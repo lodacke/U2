@@ -2,11 +2,21 @@
     {
         "username": "www",
         "password": "www",
-        "points": 0
+        "points": 4
     },
     {
         "username": "ww1",
         "password": "www",
         "points": 0
+    },
+    {
+        "username": "ww3",
+        "password": "www",
+        "points": 8
+    },
+    {
+        "username": "ww4",
+        "password": "www",
+        "points": 5
     }
 ]

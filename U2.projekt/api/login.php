@@ -17,7 +17,7 @@ if (file_exists($file_name)){
          $username = $requestDATA["username"];
          $password = $requestDATA["password"];
         
-        
+         
               for($i = 0; $i < count($users); $i++){
                   $user = $users[$i];
                   if($user["username"] == $username && $user["password"] == $password){
@@ -32,13 +32,12 @@ if (file_exists($file_name)){
                  sendJSON($registered_user);
              }
          }  sendJSON([
-         "message" => "wrong username or password"], 404);
-    }
+         "message" => "wrong username or password"], 401);
+    } else { 
+        sendJSON([
+        "message" => "Wrong HTTP method"], 405);
+    };
 
-} else { 
-    sendJSON([
-    "message" => "unabled to login at the moment, try again later", 404,
-    ]);
-};
+} 
 
 ?> 

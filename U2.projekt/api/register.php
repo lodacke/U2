@@ -45,8 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
       }
 
-      $encodedData = json_encode($users, JSON_PRETTY_PRINT);
-      file_put_contents($file_name, $encodedData);
+      $data = json_encode($users, JSON_PRETTY_PRINT);
+      file_put_contents($file_name, $data);
 
       sendJSON([
         "username" => $username,

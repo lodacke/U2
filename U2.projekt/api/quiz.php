@@ -7,19 +7,17 @@ require_once "functions.php";
 if($_SERVER["REQUEST_METHOD"] == "GET"){
    
     $images = '../images/';
-
     $dogs_images = scandir($images);
-
     $file_name = "dogs.json";
 
     $dogs = [];
 
          if (file_exists($file_name)) {
-             $users = json_decode(file_get_contents($file_name), true);
+            $json = file_get_contents($file_name);
+             $users = json_decode($json, true);
          } else {
              file_put_contents($file_name, $dogs);
          }
-
 
         foreach($dogs_images as $dog){
             $dog_name = str_replace("_", " ", $dog);
@@ -33,9 +31,8 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
     array_splice($dogs, 0,2);
 
-    $data = json_encode($dogs, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    $data = json_encode($dogs, JSON_PRETTY_PRINT);
     file_put_contents($file_name, $data);
-
 
     $first_alternatives = [];
     $i = 0;
@@ -67,6 +64,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
                       ];
                 array_push($alternatives, $option);
                 $j++;
+
             } else {
 
                 $option = [            
@@ -79,22 +77,21 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
         }   
     }
 
-       foreach($dogs as $dog){
-        if ( $correct_answer === $dog["name"]){
-            $correct_imgtag = $dog["image"];
+    foreach($dogs as $dog){
+     if ( $correct_answer === $dog["name"]){
+        $correct_imgtag = $dog["image"];
         }
-       }
+   }
 
         $alt = [
-            "image" => "images/". $correct_imgtag,    
+            "image" => $images . $correct_imgtag,    
             "alternatives" => $alternatives,
         ];    
 
         sendJSON($alt);
 
     } else {
-        $message = ["message" => "This is not the right request method"];
-        sendJSON($message, 405);
+        sendJSON(["message" => "Wrong HTTP method"], 405);
 };
 
 
@@ -103,7 +100,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 
 
 
-//ALTERNATIV 1
+//ALTERNATIV 2
 //
 //        $correct_answer = [
 //            "name" =>  $dogs[array_rand($dogs, 1)]["name"],
@@ -138,40 +135,7 @@ if($_SERVER["REQUEST_METHOD"] == "GET"){
 //            };
 //        }; 
 //    };
-//
-//    var_dump($alternatives);
-       // $data = json_encode($alternatives_1, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-       //         file_put_contents($file_name, $data);
 
-    
-
-
-       // foreach($dog as $value){
-        
-           // var_dump($value);
-            
-            
-                 //   if(array_search($correct_answer, $values)){         
-                //     if($values["name"] == $correct_answer){
-                //         $option = [ 
-                //             "correct" => true,
-                //             "name" => $correct_answer,
-                //         ];
-                //         array_push($alternatives, $option);
-                //   } 
-                //         for($i = 0; $i < 3; $i++){
-                //         $option = [ 
-                //             "correct" => false,
-                //             "name" => array_rand($dogs),
-                //         ];
-                //         array_push($alternatives, $option);
-                //         var_dump($alternatives); 
-                //     } 
-        
-               // };
-    
-       // }
- 
 ?>
 
 

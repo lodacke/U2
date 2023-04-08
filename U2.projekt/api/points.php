@@ -5,73 +5,63 @@ require_once "functions.php";
 
 $file_name = "users.json";
 
-$json = file_get_contents($file_name);
-$users = json_decode($json, true);
+if(file_exists($file_name)){
+    $json = file_get_contents($file_name);
+    $users = json_decode($json, true);
+} else {
+    sendJSON(["message " => "Couldn't load JSON-file"], 400);
+};
 
 $requestdata = file_get_contents("php://input");
 $logedinUser = json_decode($requestdata, true);
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    $username = $logedinUser["username"];
-    $password = $logedinUser["password"];
-    $points = $logedinUser["points"];
+if($_SERVER["REQUEST_METHOD"] == "GET"){
 
-    foreach($users as $user){  
+    function sorted($user_low, $user_high) {
+
+        return ($user_low["points"] > $user_high["points"]) ? - 1 : 1;
+        };
+
+        usort($users, "sorted");
+
+    $i = 0;
+    $top_five = [];
+
+        while($i < count($users)){
+
+            $user = [
+                "username" => $users[$i]["username"],
+                "points" => $users[$i]["points"],
+            ]; 
         
-        var_dump($user);
-        var_dump($username);
+         array_push($top_five, $user); 
+            $i++;    
+        };
 
+    array_slice($top_five, 0, 5);
+    sendJSON($top_five);
 
-        //Kan behöva vara forloop?
+    }  else if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-        if ($user["username"] == $username) {
+    for($i = 0; $i < count($users); $i++){  
+
+        $username = $logedinUser["username"];
+        $points = $logedinUser["points"];
+    
+        if ($users[$i]["username"] === $username) {
             
-            $user["points"] = $user["points"] + $logedinUser["points"];
+            $users[$i]["points"] = $users[$i]["points"] + $points;
             
             $encodedData = json_encode($users, JSON_PRETTY_PRINT);
             file_put_contents($file_name, $encodedData);
 
-            sendJSON(["points" => $user["points"]]);
-        } else {
-            sendJSON([
-                "error" => "Cant find user with named username."
-            ], 404);
-        }
+            sendJSON(["points" => $users[$i]["points"]]);
+          } 
     }
 } else {
-$error = ["error" => "Cant load points"];
-sendJSON($file_name);
+    sendJSON(["message" => "Wrong HTTP method"], 405);
 }
 
-if($_SERVER["REQUEST_METHOD"] == "GET"){
-
-    $sorted_users = [];
-    $i = 0;
-    while($i < count($users)){
-        $user = $users[$i];
-
-       // if($user["points"] < $user["points"])
-
-        $user = [
-            "username" => $user["username"],
-            "points" => $user["points"],
-        ]; 
-       
-     array_push($sorted_users, $user); 
-        $i++;    
-    };
-
-    arsort($sorted_users);
-
-
-   // $top_five = array_slice($sorted_users, 5, 0);
-
-
-     //sortera arrayen med users och plocka ut de 5 med högsta värden i points. 
-
-   sendJSON($sorted_users);
-
-}
 
 ?>
